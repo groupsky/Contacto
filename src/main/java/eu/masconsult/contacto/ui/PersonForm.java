@@ -93,7 +93,7 @@ public class PersonForm extends Form implements ClickListener {
 	public void addContact() {
 		// Create a temporary item for the form
 		newContact = new Contact();
-		setItemDataSource(new BeanItem(newContact));
+		setItemDataSource(new BeanItem<Contact>(newContact));
 		newContactMode = true;
 		setReadOnly(false);
 	}

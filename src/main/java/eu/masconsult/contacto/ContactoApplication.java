@@ -17,6 +17,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 import eu.masconsult.contacto.data.PersonContainer;
+import eu.masconsult.contacto.data.SearchFilter;
 import eu.masconsult.contacto.ui.HelpWindow;
 import eu.masconsult.contacto.ui.ListView;
 import eu.masconsult.contacto.ui.NavigationTree;
@@ -26,7 +27,8 @@ import eu.masconsult.contacto.ui.SearchView;
 import eu.masconsult.contacto.ui.SharingOptions;
 
 @SuppressWarnings("serial")
-public class ContactoApplication extends Application implements ClickListener, ValueChangeListener, ItemClickListener{
+public class ContactoApplication extends Application implements ClickListener,
+		ValueChangeListener, ItemClickListener {
 
 	private Button newContact = new Button("Add contact");
 	private Button search = new Button("Search");
@@ -87,10 +89,10 @@ public class ContactoApplication extends Application implements ClickListener, V
 		lo.addComponent(search);
 		lo.addComponent(share);
 		lo.addComponent(help);
-		
+
 		search.addListener((Button.ClickListener) this);
 		newContact.addListener((Button.ClickListener) this);
-		
+
 		return lo;
 	}
 
@@ -122,18 +124,18 @@ public class ContactoApplication extends Application implements ClickListener, V
 	public PersonContainer getDataSource() {
 		return dataSource;
 	}
-	
+
 	private SearchView getSearchView() {
-        if (searchView == null) {
-            searchView = new SearchView(this);
-        }
-        return searchView;
-    }
-	
-	private void showSearchView() {
-	    setMainComponent(getSearchView());
+		if (searchView == null) {
+			searchView = new SearchView(this);
+		}
+		return searchView;
 	}
-	
+
+	private void showSearchView() {
+		setMainComponent(getSearchView());
+	}
+
 	private void showListView() {
 		setMainComponent(getListView());
 	}
@@ -142,7 +144,7 @@ public class ContactoApplication extends Application implements ClickListener, V
 	public void buttonClick(ClickEvent event) {
 		final Button source = event.getButton();
 		if (source == search) {
-		    showSearchView();
+			showSearchView();
 		} else if (source == newContact) {
 			addNewContanct();
 		}
@@ -151,31 +153,55 @@ public class ContactoApplication extends Application implements ClickListener, V
 	@Override
 	public void valueChange(ValueChangeEvent event) {
 		Property property = event.getProperty();
-        if (property == personList) {
-            Item item = personList.getItem(personList.getValue());
-            if (item != personForm.getItemDataSource()) {
-                personForm.setItemDataSource(item);
-           }
-        }
+		if (property == personList) {
+			Item item = personList.getItem(personList.getValue());
+			if (item != personForm.getItemDataSource()) {
+				personForm.setItemDataSource(item);
+			}
+		}
 	}
 
 	@Override
 	public void itemClick(ItemClickEvent event) {
-		if(event.getSource() == tree) {
-            Object itemId = event.getItemId();
-            if (itemId != null) {
-                if (NavigationTree.SHOW_ALL.equals(itemId)) {
-                    showListView();
-                } else if (NavigationTree.SEARCH.equals(itemId)) {
-                    showSearchView();
-                }
-            }
-        }
+		if (event.getSource() == tree) {
+			Object itemId = event.getItemId();
+			if (itemId != null) {
+				if (NavigationTree.SHOW_ALL.equals(itemId)) {
+					// clear previous filters
+					getDataSource().removeAllContainerFilters();
+					showListView();
+				} else if (NavigationTree.SEARCH.equals(itemId)) {
+					showSearchView();
+				} else if (itemId instanceof SearchFilter) {
+					search((SearchFilter) itemId);
+				} 
+			}
+		}
+	}
+
+	private void addNewContanct() {
+		showListView();
+		personForm.addContact();
+	}
+
+	public void search(SearchFilter searchFilter) {
+		// clear previous filters
+		getDataSource().removeAllContainerFilters();
+		// filter contacts with given filter
+		getDataSource().addContainerFilter(searchFilter.getPropertyId(),
+				searchFilter.getTerm(), true, false);
+		showListView();
 	}
 	
-	private void addNewContanct() {
-        showListView();
-        personForm.addContact();
+	public void saveSearch(SearchFilter searchFilter) {
+        tree.addItem(searchFilter);
+        tree.setParent(searchFilter, NavigationTree.SEARCH);
+        // mark the saved search as a leaf (cannot have children)
+        tree.setChildrenAllowed(searchFilter, false);
+        // make sure "Search" is expanded
+        tree.expandItem(NavigationTree.SEARCH);
+        // select the saved search
+        tree.setValue(searchFilter);
     }
 
 }
