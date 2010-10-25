@@ -37,6 +37,9 @@ public class PersonList extends Table {
          setImmediate(true);
          addListener((Property.ValueChangeListener) app);
          setNullSelectionAllowed(false);
+         
+         setColumnCollapsingAllowed(true);
+         setColumnReorderingAllowed(true);
    }
 
 }
