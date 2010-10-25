@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -15,6 +16,7 @@ import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.TextField;
 
 import eu.masconsult.contacto.ContactoApplication;
 import eu.masconsult.contacto.data.PersonContainer;
@@ -59,16 +61,30 @@ public class PersonForm extends Form implements ClickListener {
 			String city = (it.next()).getCity();
 			cities.addItem(city);
 		}
-		
+
+		/*
+		 * Field factory for overriding how the component for city selection is
+		 * created
+		 */
 		setFormFieldFactory(new DefaultFieldFactory() {
-		     @Override
-		     public Field createField(Item item, Object propertyId,
-		        Component uiContext) {
-		        if (propertyId.equals("city")) {
-		           return cities;
-		        }
-		        return super.createField(item, propertyId, uiContext);
-		    }
+			@Override
+			public Field createField(Item item, Object propertyId,
+					Component uiContext) {
+				if (propertyId.equals("city")) {
+					return cities;
+				} else {
+					Field field = super.createField(item, propertyId, uiContext);
+					
+					TextField tf = (TextField) field;
+					tf.setNullRepresentation("");
+					tf.setRequired(true);
+					
+					if (propertyId.equals("email")) {
+						tf.addValidator(new EmailValidator("Email you entered is not valid."));
+					}
+					return field;
+				}
+			}
 		});
 	}
 
