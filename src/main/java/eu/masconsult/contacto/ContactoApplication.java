@@ -89,6 +89,7 @@ public class ContactoApplication extends Application implements ClickListener, V
 		lo.addComponent(help);
 		
 		search.addListener((Button.ClickListener) this);
+		newContact.addListener((Button.ClickListener) this);
 		
 		return lo;
 	}
@@ -142,6 +143,8 @@ public class ContactoApplication extends Application implements ClickListener, V
 		final Button source = event.getButton();
 		if (source == search) {
 		    showSearchView();
+		} else if (source == newContact) {
+			addNewContanct();
 		}
 	}
 
@@ -169,5 +172,10 @@ public class ContactoApplication extends Application implements ClickListener, V
             }
         }
 	}
+	
+	private void addNewContanct() {
+        showListView();
+        personForm.addContact();
+    }
 
 }

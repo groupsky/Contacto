@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.vaadin.data.Item;
+import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -12,6 +13,7 @@ import com.vaadin.ui.HorizontalLayout;
 
 import eu.masconsult.contacto.ContactoApplication;
 import eu.masconsult.contacto.data.PersonContainer;
+import eu.masconsult.contacto.domain.Contact;
 
 public class PersonForm extends Form implements ClickListener {
 
@@ -21,6 +23,9 @@ public class PersonForm extends Form implements ClickListener {
 	private Button cancel = new Button("Cancel", (ClickListener) this);
 	private Button edit = new Button("Edit", (ClickListener) this);
 	private ContactoApplication app;
+
+	private boolean newContactMode = false;
+	private Contact newContact = null;
 
 	public PersonForm(ContactoApplication app) {
 		this.app = app;
@@ -43,9 +48,19 @@ public class PersonForm extends Form implements ClickListener {
 				return;
 			}
 			commit();
+			if (newContactMode) {
+				Item addedItem = app.getDataSource().addItem(newContact);
+				setItemDataSource(addedItem);
+				newContactMode = false;
+			}
 			setReadOnly(true);
 		} else if (source == cancel) {
-			discard();
+			if (newContactMode) {
+				newContactMode = false;
+				setItemDataSource(null);
+			} else {
+				discard();
+			}
 			setReadOnly(true);
 		} else if (source == edit) {
 			setReadOnly(false);
@@ -54,6 +69,7 @@ public class PersonForm extends Form implements ClickListener {
 
 	@Override
 	public void setItemDataSource(Item newDataSource) {
+		newContactMode = false;
 		if (newDataSource != null) {
 			List<Object> orderedProperties = Arrays
 					.asList(PersonContainer.NATURAL_COL_ORDER);
@@ -72,5 +88,13 @@ public class PersonForm extends Form implements ClickListener {
 		save.setVisible(!readOnly);
 		cancel.setVisible(!readOnly);
 		edit.setVisible(readOnly);
+	}
+
+	public void addContact() {
+		// Create a temporary item for the form
+		newContact = new Contact();
+		setItemDataSource(new BeanItem(newContact));
+		newContactMode = true;
+		setReadOnly(false);
 	}
 }
