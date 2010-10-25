@@ -1,6 +1,7 @@
 package eu.masconsult.contacto.ui;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import com.vaadin.data.Item;
@@ -8,6 +9,10 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.DefaultFieldFactory;
+import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
 
@@ -27,6 +32,8 @@ public class PersonForm extends Form implements ClickListener {
 	private boolean newContactMode = false;
 	private Contact newContact = null;
 
+	private final ComboBox cities = new ComboBox("City");
+
 	public PersonForm(ContactoApplication app) {
 		this.app = app;
 		setWriteThrough(false);
@@ -39,6 +46,30 @@ public class PersonForm extends Form implements ClickListener {
 		footer.setVisible(false);
 
 		setFooter(footer);
+
+		/* Allow the user to enter new cities */
+		cities.setNewItemsAllowed(true);
+		/* We do not want to use null values */
+		cities.setNullSelectionAllowed(false);
+		/* Add an empty city used for selecting no city */
+		cities.addItem("");
+		/* Populate cities select using the cities in the data container */
+		PersonContainer ds = app.getDataSource();
+		for (Iterator<Contact> it = ds.getItemIds().iterator(); it.hasNext();) {
+			String city = (it.next()).getCity();
+			cities.addItem(city);
+		}
+		
+		setFormFieldFactory(new DefaultFieldFactory() {
+		     @Override
+		     public Field createField(Item item, Object propertyId,
+		        Component uiContext) {
+		        if (propertyId.equals("city")) {
+		           return cities;
+		        }
+		        return super.createField(item, propertyId, uiContext);
+		    }
+		});
 	}
 
 	public void buttonClick(ClickEvent event) {

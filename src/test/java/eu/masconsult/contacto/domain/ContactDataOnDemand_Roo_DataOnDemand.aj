@@ -20,6 +20,7 @@ privileged aspect ContactDataOnDemand_Roo_DataOnDemand {
     
     public Contact ContactDataOnDemand.getNewTransientContact(int index) {
         eu.masconsult.contacto.domain.Contact obj = new eu.masconsult.contacto.domain.Contact();
+        obj.setCity("city_" + index);
         obj.setEmail("email_" + index);
         obj.setFirstName("firstName_" + index);
         obj.setLastName("lastName_" + index);

@@ -31,4 +31,12 @@ privileged aspect Contact_Roo_JavaBean {
         this.email = email;
     }
     
+    public String Contact.getCity() {
+        return this.city;
+    }
+    
+    public void Contact.setCity(String city) {
+        this.city = city;
+    }
+    
 }

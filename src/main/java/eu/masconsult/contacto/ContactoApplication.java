@@ -15,6 +15,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Window.Notification;
 
 import eu.masconsult.contacto.data.PersonContainer;
 import eu.masconsult.contacto.data.SearchFilter;
@@ -174,7 +175,7 @@ public class ContactoApplication extends Application implements ClickListener,
 					showSearchView();
 				} else if (itemId instanceof SearchFilter) {
 					search((SearchFilter) itemId);
-				} 
+				}
 			}
 		}
 	}
@@ -191,17 +192,23 @@ public class ContactoApplication extends Application implements ClickListener,
 		getDataSource().addContainerFilter(searchFilter.getPropertyId(),
 				searchFilter.getTerm(), true, false);
 		showListView();
+
+		getMainWindow().showNotification(
+				"Searched for " + searchFilter.getPropertyId() + "=*"
+						+ searchFilter.getTerm() + "*, found "
+						+ getDataSource().size() + " item(s).",
+				Notification.TYPE_TRAY_NOTIFICATION);
 	}
-	
+
 	public void saveSearch(SearchFilter searchFilter) {
-        tree.addItem(searchFilter);
-        tree.setParent(searchFilter, NavigationTree.SEARCH);
-        // mark the saved search as a leaf (cannot have children)
-        tree.setChildrenAllowed(searchFilter, false);
-        // make sure "Search" is expanded
-        tree.expandItem(NavigationTree.SEARCH);
-        // select the saved search
-        tree.setValue(searchFilter);
-    }
+		tree.addItem(searchFilter);
+		tree.setParent(searchFilter, NavigationTree.SEARCH);
+		// mark the saved search as a leaf (cannot have children)
+		tree.setChildrenAllowed(searchFilter, false);
+		// make sure "Search" is expanded
+		tree.expandItem(NavigationTree.SEARCH);
+		// select the saved search
+		tree.setValue(searchFilter);
+	}
 
 }

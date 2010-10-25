@@ -16,4 +16,6 @@ public class Contact {
     private String lastName;
 
     private String email;
+
+    private String city;
 }
