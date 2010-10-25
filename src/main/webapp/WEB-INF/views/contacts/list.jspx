@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_eu_masconsult_contacto_domain_Contact" items="${contacts}" z="yuAswVZjfvyHj7g/VKpPJ325/JI=">
+        <table:table data="${contacts}" id="l_eu_masconsult_contacto_domain_Contact" path="/contacts" z="QZAuk4thzPoNe6xlnpTMgXlJhc0=">
+            <table:column id="c_eu_masconsult_contacto_domain_Contact_firstName" property="firstName" z="iOwAXP5zxaD2e7QuFxCdesm1Lng="/>
+            <table:column id="c_eu_masconsult_contacto_domain_Contact_lastName" property="lastName" z="39vzg6hHxBECyWSekhAs4rsFffU="/>
+        </table:table>
+    </page:list>
+</div>

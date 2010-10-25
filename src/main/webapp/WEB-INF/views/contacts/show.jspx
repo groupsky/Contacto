@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_eu_masconsult_contacto_domain_Contact" object="${contact}" path="/contacts" z="eHI/40GEgVWvQMMMMNHg3unwepY=">
+        <field:display field="firstName" id="s_eu_masconsult_contacto_domain_Contact_firstName" object="${contact}" z="cdrkZchH+NXj0qCxKtZuAGmYyjo="/>
+        <field:display field="lastName" id="s_eu_masconsult_contacto_domain_Contact_lastName" object="${contact}" z="WuFqjgY5EWJk6ttX5wPt5Cd0gDw="/>
+    </page:show>
+</div>
