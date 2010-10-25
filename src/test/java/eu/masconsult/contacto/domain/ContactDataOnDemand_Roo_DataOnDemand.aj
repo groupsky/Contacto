@@ -7,6 +7,8 @@ import eu.masconsult.contacto.domain.Contact;
 import java.util.List;
 import java.util.Random;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect ContactDataOnDemand_Roo_DataOnDemand {
     
@@ -41,7 +43,18 @@ privileged aspect ContactDataOnDemand_Roo_DataOnDemand {
         return false;
     }
     
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void ContactDataOnDemand.init() {
+        if (data != null && !data.isEmpty()) {
+            return;
+        }
+        
+        data = eu.masconsult.contacto.domain.Contact.findContactEntries(0, 10);
+        if (data == null) throw new IllegalStateException("Find entries implementation for 'Contact' illegally returned null");
+        if (!data.isEmpty()) {
+            return;
+        }
+        
         data = new java.util.ArrayList<eu.masconsult.contacto.domain.Contact>();
         for (int i = 0; i < 10; i++) {
             eu.masconsult.contacto.domain.Contact obj = getNewTransientContact(i);

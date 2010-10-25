@@ -17,8 +17,6 @@ privileged aspect ContactIntegrationTest_Roo_IntegrationTest {
     
     declare @type: ContactIntegrationTest: @ContextConfiguration(locations = "classpath:/META-INF/spring/applicationContext.xml");
     
-    declare @type: ContactIntegrationTest: @Transactional;
-    
     @Autowired
     private ContactDataOnDemand ContactIntegrationTest.dod;
     
@@ -61,6 +59,7 @@ privileged aspect ContactIntegrationTest_Roo_IntegrationTest {
     }
     
     @Test
+    @Transactional
     public void ContactIntegrationTest.testFlush() {
         eu.masconsult.contacto.domain.Contact obj = dod.getRandomContact();
         org.junit.Assert.assertNotNull("Data on demand for 'Contact' failed to initialize correctly", obj);
@@ -71,10 +70,11 @@ privileged aspect ContactIntegrationTest_Roo_IntegrationTest {
         boolean modified =  dod.modifyContact(obj);
         java.lang.Integer currentVersion = obj.getVersion();
         obj.flush();
-        org.junit.Assert.assertTrue("Version for 'Contact' failed to increment on flush directive", (currentVersion != null && obj.getVersion() > currentVersion) || !modified);
+        org.junit.Assert.assertTrue("Version for 'Contact' failed to increment on flush directive", obj.getVersion() > currentVersion || !modified);
     }
     
     @Test
+    @Transactional
     public void ContactIntegrationTest.testMerge() {
         eu.masconsult.contacto.domain.Contact obj = dod.getRandomContact();
         org.junit.Assert.assertNotNull("Data on demand for 'Contact' failed to initialize correctly", obj);
@@ -83,13 +83,13 @@ privileged aspect ContactIntegrationTest_Roo_IntegrationTest {
         obj = eu.masconsult.contacto.domain.Contact.findContact(id);
         boolean modified =  dod.modifyContact(obj);
         java.lang.Integer currentVersion = obj.getVersion();
-        eu.masconsult.contacto.domain.Contact merged = (eu.masconsult.contacto.domain.Contact) obj.merge();
+        obj.merge();
         obj.flush();
-        org.junit.Assert.assertEquals("Identifier of merged object not the same as identifier of original object", merged.getId(), id);
-        org.junit.Assert.assertTrue("Version for 'Contact' failed to increment on merge and flush directive", (currentVersion != null && obj.getVersion() > currentVersion) || !modified);
+        org.junit.Assert.assertTrue("Version for 'Contact' failed to increment on merge and flush directive", obj.getVersion() > currentVersion || !modified);
     }
     
     @Test
+    @Transactional
     public void ContactIntegrationTest.testPersist() {
         org.junit.Assert.assertNotNull("Data on demand for 'Contact' failed to initialize correctly", dod.getRandomContact());
         eu.masconsult.contacto.domain.Contact obj = dod.getNewTransientContact(Integer.MAX_VALUE);
@@ -101,6 +101,7 @@ privileged aspect ContactIntegrationTest_Roo_IntegrationTest {
     }
     
     @Test
+    @Transactional
     public void ContactIntegrationTest.testRemove() {
         eu.masconsult.contacto.domain.Contact obj = dod.getRandomContact();
         org.junit.Assert.assertNotNull("Data on demand for 'Contact' failed to initialize correctly", obj);

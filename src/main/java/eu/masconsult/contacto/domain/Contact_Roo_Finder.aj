@@ -3,25 +3,24 @@
 
 package eu.masconsult.contacto.domain;
 
-import eu.masconsult.contacto.domain.Contact;
 import java.lang.String;
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
+import javax.persistence.Query;
 
 privileged aspect Contact_Roo_Finder {
     
-    public static TypedQuery<Contact> Contact.findContactsByFirstName(String firstName) {
+    public static Query Contact.findContactsByFirstName(String firstName) {
         if (firstName == null || firstName.length() == 0) throw new IllegalArgumentException("The firstName argument is required");
         EntityManager em = Contact.entityManager();
-        TypedQuery<Contact> q = em.createQuery("SELECT Contact FROM Contact AS contact WHERE contact.firstName = :firstName", Contact.class);
+        Query q = em.createQuery("SELECT Contact FROM Contact AS contact WHERE contact.firstName = :firstName");
         q.setParameter("firstName", firstName);
         return q;
     }
     
-    public static TypedQuery<Contact> Contact.findContactsByLastName(String lastName) {
+    public static Query Contact.findContactsByLastName(String lastName) {
         if (lastName == null || lastName.length() == 0) throw new IllegalArgumentException("The lastName argument is required");
         EntityManager em = Contact.entityManager();
-        TypedQuery<Contact> q = em.createQuery("SELECT Contact FROM Contact AS contact WHERE contact.lastName = :lastName", Contact.class);
+        Query q = em.createQuery("SELECT Contact FROM Contact AS contact WHERE contact.lastName = :lastName");
         q.setParameter("lastName", lastName);
         return q;
     }
