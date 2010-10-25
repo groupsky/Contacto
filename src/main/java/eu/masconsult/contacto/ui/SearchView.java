@@ -26,6 +26,7 @@ public class SearchView extends Panel {
 	@SuppressWarnings("serial")
 	public SearchView(final ContactoApplication app) {
 		this.app = app;
+		addStyleName("view");
 
 		setCaption("Search contacts");
 		setSizeFull();

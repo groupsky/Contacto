@@ -7,10 +7,13 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.terminal.ThemeResource;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.VerticalLayout;
@@ -63,7 +66,7 @@ public class ContactoApplication extends Application implements ClickListener,
 
 	private void buildMainLayout() {
 		setMainWindow(new Window("Address Book Demo application"));
-		setTheme("runo");
+		setTheme("contacts");
 
 		VerticalLayout layout = new VerticalLayout();
 		layout.setSizeFull();
@@ -91,9 +94,28 @@ public class ContactoApplication extends Application implements ClickListener,
 		lo.addComponent(share);
 		lo.addComponent(help);
 
-		search.addListener((Button.ClickListener) this);
-		newContact.addListener((Button.ClickListener) this);
+		search.addListener((ClickListener) this);
+		share.addListener((ClickListener) this);
+		help.addListener((ClickListener) this);
+		newContact.addListener((ClickListener) this);
+		
+		search.setIcon(new ThemeResource("icons/32/folder-add.png"));
+		share.setIcon(new ThemeResource("icons/32/users.png"));
+		help.setIcon(new ThemeResource("icons/32/help.png"));
+		newContact.setIcon(new ThemeResource("icons/32/document-add.png"));
 
+		lo.setMargin(true);
+		lo.setSpacing(true);
+
+		lo.setStyleName("toolbar");
+
+		lo.setWidth("100%");
+
+		Embedded em = new Embedded("", new ThemeResource("images/logo.png"));
+		lo.addComponent(em);
+		lo.setComponentAlignment(em, Alignment.MIDDLE_RIGHT);
+		lo.setExpandRatio(em, 1);
+		
 		return lo;
 	}
 
@@ -144,11 +166,24 @@ public class ContactoApplication extends Application implements ClickListener,
 	@Override
 	public void buttonClick(ClickEvent event) {
 		final Button source = event.getButton();
+
 		if (source == search) {
 			showSearchView();
+		} else if (source == help) {
+			showHelpWindow();
+		} else if (source == share) {
+			showShareWindow();
 		} else if (source == newContact) {
 			addNewContanct();
 		}
+	}
+	
+	private void showHelpWindow() {
+		getMainWindow().addWindow(getHelpWindow());
+	}
+
+	private void showShareWindow() {
+		getMainWindow().addWindow(getSharingOptions());
 	}
 
 	@Override
