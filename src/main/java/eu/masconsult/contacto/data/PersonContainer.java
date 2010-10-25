@@ -13,9 +13,9 @@ public class PersonContainer extends BeanItemContainer<Contact> implements
 	private static final long serialVersionUID = 1L;
 
 	public static final Object[] NATURAL_COL_ORDER = new Object[] {
-			"firstName", "lastName"};
+			"firstName", "lastName", "email"};
 	public static final String[] COL_HEADERS_ENGLISH = new String[] {
-			"First name", "Last name"};
+			"First name", "Last name", "Email"};
 
 	public PersonContainer() throws InstantiationException,
 			IllegalAccessException {
@@ -29,6 +29,7 @@ public class PersonContainer extends BeanItemContainer<Contact> implements
 		Contact cc = new Contact();
 		cc.setFirstName("ivan");
 		cc.setLastName("petrov");
+		cc.setEmail("ivan@masconsult.eu");
 		cc.merge();
 
 		for (Contact c : Contact.findAllContacts())

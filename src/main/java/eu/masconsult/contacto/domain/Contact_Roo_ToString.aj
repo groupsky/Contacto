@@ -12,7 +12,8 @@ privileged aspect Contact_Roo_ToString {
         sb.append("Id: ").append(getId()).append(", ");
         sb.append("Version: ").append(getVersion()).append(", ");
         sb.append("FirstName: ").append(getFirstName()).append(", ");
-        sb.append("LastName: ").append(getLastName());
+        sb.append("LastName: ").append(getLastName()).append(", ");
+        sb.append("Email: ").append(getEmail());
         return sb.toString();
     }
     

@@ -23,4 +23,12 @@ privileged aspect Contact_Roo_JavaBean {
         this.lastName = lastName;
     }
     
+    public String Contact.getEmail() {
+        return this.email;
+    }
+    
+    public void Contact.setEmail(String email) {
+        this.email = email;
+    }
+    
 }
