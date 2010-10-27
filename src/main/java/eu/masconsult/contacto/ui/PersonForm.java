@@ -57,8 +57,8 @@ public class PersonForm extends Form implements ClickListener {
 		cities.addItem("");
 		/* Populate cities select using the cities in the data container */
 		PersonContainer ds = app.getDataSource();
-		for (Iterator<Contact> it = ds.getItemIds().iterator(); it.hasNext();) {
-			String city = (it.next()).getCity();
+		for (Iterator<Object> it = ds.getItemIds().iterator(); it.hasNext();) {
+			String city = ds.getItem(it.next()).getEntity().getCity();
 			cities.addItem(city);
 		}
 
@@ -96,8 +96,7 @@ public class PersonForm extends Form implements ClickListener {
 			}
 			commit();
 			if (newContactMode) {
-				Item addedItem = app.getDataSource().addItem(newContact);
-				setItemDataSource(addedItem);
+				setItemDataSource(app.getDataSource().getItem(app.getDataSource().addEntity(newContact)));
 				newContactMode = false;
 			}
 			setReadOnly(true);

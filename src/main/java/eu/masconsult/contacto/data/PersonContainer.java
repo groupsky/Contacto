@@ -1,41 +1,26 @@
 package eu.masconsult.contacto.data;
 
-import java.io.Serializable;
+import javax.persistence.EntityManager;
 
-import com.vaadin.Application;
-import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.addon.jpacontainer.JPAContainer;
+import com.vaadin.addon.jpacontainer.provider.BatchableLocalEntityProvider;
 
 import eu.masconsult.contacto.domain.Contact;
 
-public class PersonContainer extends BeanItemContainer<Contact> implements
-		Serializable {
+public class PersonContainer extends JPAContainer<Contact> {
 
 	private static final long serialVersionUID = 1L;
 
 	public static final Object[] NATURAL_COL_ORDER = new Object[] {
-			"firstName", "lastName", "email", "city"};
+			"firstName", "lastName", "email", "city" };
 	public static final String[] COL_HEADERS_ENGLISH = new String[] {
-			"First name", "Last name", "Email", "City"};
+			"First name", "Last name", "Email", "City" };
 
-	public PersonContainer() throws InstantiationException,
-			IllegalAccessException {
+	public PersonContainer(EntityManager entityManager) {
 		super(Contact.class);
-	}
-
-	public static PersonContainer getAllContacts(Application app)
-			throws InstantiationException, IllegalAccessException {
-		PersonContainer cont = new PersonContainer();
-
-		Contact cc = new Contact();
-		cc.setFirstName("ivan");
-		cc.setLastName("petrov");
-		cc.setEmail("ivan@masconsult.eu");
-		cc.setCity("Plovdiv");
-		cc.merge();
-
-		for (Contact c : Contact.findAllContacts())
-			cont.addBean(c);
-
-		return cont;
+		BatchableLocalEntityProvider<Contact> lep = new BatchableLocalEntityProvider<Contact>(
+				Contact.class, entityManager);
+		setEntityProvider(lep);
+		setAutoCommit(true);
 	}
 }

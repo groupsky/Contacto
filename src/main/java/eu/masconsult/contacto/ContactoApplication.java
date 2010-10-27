@@ -1,5 +1,7 @@
 package eu.masconsult.contacto;
 
+import javax.persistence.EntityManagerFactory;
+
 import com.vaadin.Application;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -29,6 +31,7 @@ import eu.masconsult.contacto.ui.PersonForm;
 import eu.masconsult.contacto.ui.PersonList;
 import eu.masconsult.contacto.ui.SearchView;
 import eu.masconsult.contacto.ui.SharingOptions;
+import eu.masconsult.contacto.util.SpringContextHelper;
 
 @SuppressWarnings("serial")
 public class ContactoApplication extends Application implements ClickListener,
@@ -50,16 +53,16 @@ public class ContactoApplication extends Application implements ClickListener,
 	private SearchView searchView = null;
 
 	private PersonContainer dataSource = null;
+	
+	SpringContextHelper helper;
 
 	@Override
 	public void init() {
-		try {
-			dataSource = PersonContainer.getAllContacts(this);
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
+		
+		helper = new SpringContextHelper(this);
+        EntityManagerFactory factory = (EntityManagerFactory) helper.getBean("entityManagerFactory");
+		
+		dataSource = new PersonContainer(factory.createEntityManager());
 
 		buildMainLayout();
 	}

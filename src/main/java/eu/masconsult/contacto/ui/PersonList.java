@@ -8,7 +8,6 @@ import com.vaadin.ui.Table;
 
 import eu.masconsult.contacto.ContactoApplication;
 import eu.masconsult.contacto.data.PersonContainer;
-import eu.masconsult.contacto.domain.Contact;
 
 public class PersonList extends Table {
 
@@ -20,10 +19,9 @@ public class PersonList extends Table {
          addGeneratedColumn("email", new ColumnGenerator() {
              public Component generateCell(Table source, Object itemId,
                      Object columnId) {
-                 Contact contact = (Contact) itemId;
                  Link l = new Link();
-                 l.setResource(new ExternalResource("mailto:" + contact.getEmail()));
-                 l.setCaption(contact.getEmail());
+                 l.setResource(new ExternalResource("mailto:" + source.getContainerProperty(itemId, "email").getValue()));
+                 l.setCaption(source.getContainerProperty(itemId, "email").getValue() + "");
                  return l;
              }
          });
